@@ -114,3 +114,7 @@ Saveit is built with modern web technologies to ensure a robust, scalable, and u
 ## Getting Started
 
 (Instructions on how to set up and run the project locally would go here.)
+
+intro
+more features
+currency change

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import Image from "next/image"
 import {
   LayoutDashboard,
   Wallet,
@@ -54,7 +55,7 @@ export function Navigation() {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <PiggyBank className="h-6 w-6 text-primary" />
+            <Image src="/saveit_logo.png" alt="Save It Logo" width={32} height={32} priority />
             <span className="font-bold text-xl">Save It</span>
           </div>
           <div className="flex items-center gap-4">
