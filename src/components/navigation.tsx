@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
 import {
@@ -18,6 +19,7 @@ import {
   CheckSquare,
   Heart,
   Ellipsis,
+  Menu,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -49,6 +51,7 @@ const moreNavItems = navItems.slice(5)
 
 export function Navigation() {
   const pathname = usePathname()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <nav className="border-b bg-card">
@@ -58,7 +61,7 @@ export function Navigation() {
             <Image src="/saveit_logo.png" alt="Save It Logo" width={32} height={32} priority />
             <span className="font-bold text-xl">Save It</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex gap-1">
               {mainNavItems.map((item) => {
                 const Icon = item.icon
@@ -108,8 +111,46 @@ export function Navigation() {
             <ThemeToggle />
             <CurrencySelector />
           </div>
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-muted-foreground hover:text-foreground focus:outline-none"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-card pb-4">
+          <div className="flex flex-col items-start px-6 gap-2">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full",
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              )
+            })}
+            <div className="w-full flex justify-between items-center px-4 py-2">
+              <ThemeToggle />
+              <CurrencySelector />
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
