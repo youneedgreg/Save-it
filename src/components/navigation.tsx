@@ -55,7 +55,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <PiggyBank className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">Money Mastery</span>
+            <span className="font-bold text-xl">Save It</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex gap-1">

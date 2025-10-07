@@ -43,7 +43,7 @@ export default function DashboardPage() {
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight text-balance">Money Mastery</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-balance">Save It</h1>
           <p className="text-muted-foreground text-pretty">
             Take control of your financial future with comprehensive tracking and insights
           </p>
