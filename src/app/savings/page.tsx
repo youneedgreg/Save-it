@@ -1,10 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useState } from "react"
-import { Plus, Pencil, Trash2, TrendingUp } from "lucide-react"
-import { Navigation } from "@/components/navigation"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -15,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getFinancialData, addSavingsGoal, updateSavingsGoal, deleteSavingsGoal } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { SavingsGoal } from "@/lib/types"
+import { Plus, Pencil, Trash2, TrendingUp } from "lucide-react"
 
 export default function SavingsPage() {
   const [goals, setGoals] = useState<SavingsGoal[]>([])
@@ -140,7 +137,6 @@ export default function SavingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -209,7 +205,7 @@ export default function SavingsPage() {
                   <Label htmlFor="priority">Priority</Label>
                   <Select
                     value={formData.priority}
-                    onValueChange={(value: any) => setFormData({ ...formData, priority: value })}
+                    onValueChange={(value: string) => setFormData({ ...formData, priority: value as "high" | "medium" | "low" })}
                   >
                     <SelectTrigger>
                       <SelectValue />

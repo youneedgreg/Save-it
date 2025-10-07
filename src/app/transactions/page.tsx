@@ -1,10 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useState } from "react"
-import { Plus, Trash2, ArrowUpCircle, ArrowDownCircle, Filter } from "lucide-react"
-import { Navigation } from "@/components/navigation"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -14,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getFinancialData, addTransaction, deleteTransaction, updateBudget } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { Transaction } from "@/lib/types"
+import { Plus, Filter, ArrowUpCircle, ArrowDownCircle, Trash2 } from "lucide-react"
 
 const CATEGORIES = [
   "Salary",
@@ -122,7 +119,6 @@ export default function TransactionsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -145,7 +141,7 @@ export default function TransactionsPage() {
                   <Label htmlFor="type">Type</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(value: any) => setFormData({ ...formData, type: value })}
+                    onValueChange={(value: string) => setFormData({ ...formData, type: value as "income" | "expense" })}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -251,7 +247,7 @@ export default function TransactionsPage() {
                 <CardDescription>{filteredTransactions.length} transactions</CardDescription>
               </div>
               <div className="flex gap-2">
-                <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+                <Select value={filterType} onValueChange={(value: string) => setFilterType(value as "all" | "income" | "expense")}>
                   <SelectTrigger className="w-[140px]">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue />

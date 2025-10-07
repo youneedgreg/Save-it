@@ -1,8 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -116,7 +114,15 @@ export default function WishlistPage() {
   }
 
   const getCategoryIcon = (category: string) => {
-    return "🎁"
+    const icons: Record<string, string> = {
+      electronics: "💻",
+      clothing: "👔",
+      travel: "✈️",
+      home: "🏠",
+      entertainment: "🎮",
+      other: "🎁",
+    }
+    return icons[category] || "🎁"
   }
 
   const activeItems = wishlist.filter((item) => !item.isPurchased)
@@ -165,7 +171,7 @@ export default function WishlistPage() {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value: any) => setFormData({ ...formData, category: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, category: value as WishlistItem["category"] })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -184,7 +190,7 @@ export default function WishlistPage() {
                 <Label htmlFor="priority">Priority</Label>
                 <Select
                   value={formData.priority}
-                  onValueChange={(value: any) => setFormData({ ...formData, priority: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, priority: value as WishlistItem["priority"] })}
                 >
                   <SelectTrigger>
                     <SelectValue />

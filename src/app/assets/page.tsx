@@ -1,9 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
-import { Navigation } from "@/components/navigation"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -141,7 +138,6 @@ export default function AssetsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       <main className="container mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Assets & Liabilities</h1>

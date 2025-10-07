@@ -1,10 +1,6 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useState } from "react"
-import { Plus, Pencil, Trash2, AlertCircle } from "lucide-react"
-import { Navigation } from "@/components/navigation"
+import React, { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -16,6 +12,7 @@ import { getFinancialData, addDebt, updateDebt, deleteDebt } from "@/lib/storage
 import { formatCurrency, calculateDebtPayoffMonths } from "@/lib/calculations"
 import type { Debt } from "@/lib/types"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Plus, Pencil, Trash2, AlertCircle } from "lucide-react"
 
 export default function DebtsPage() {
   const [debts, setDebts] = useState<Debt[]>([])
@@ -135,7 +132,6 @@ export default function DebtsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -168,7 +164,9 @@ export default function DebtsPage() {
                   <Label htmlFor="type">Debt Type</Label>
                   <Select
                     value={formData.type}
-                    onValueChange={(value: any) => setFormData({ ...formData, type: value })}
+                    onValueChange={(value: string) =>
+                      setFormData({ ...formData, type: value as "credit-card" | "loan" | "mortgage" | "other" })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />

@@ -195,7 +195,7 @@ export default function LoansPage() {
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, status: value as "active" | "repaid" | "overdue" })}
                 >
                   <SelectTrigger>
                     <SelectValue />

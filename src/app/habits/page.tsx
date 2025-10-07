@@ -197,7 +197,7 @@ export default function HabitsPage() {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value: any) => setFormData({ ...formData, category: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, category: value as Habit["category"] })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -215,7 +215,7 @@ export default function HabitsPage() {
                 <Label htmlFor="frequency">Frequency</Label>
                 <Select
                   value={formData.frequency}
-                  onValueChange={(value: any) => setFormData({ ...formData, frequency: value })}
+                  onValueChange={(value: string) => setFormData({ ...formData, frequency: value as Habit["frequency"] })}
                 >
                   <SelectTrigger>
                     <SelectValue />

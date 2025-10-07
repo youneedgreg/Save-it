@@ -14,7 +14,6 @@ import {
   calculateDebtPayoffMonths,
 } from "@/lib/calculations"
 import type { FinancialData } from "@/lib/types"
-import { Navigation } from "@/components/navigation"
 
 export default function DashboardPage() {
   const [data, setData] = useState<FinancialData | null>(null)
@@ -39,7 +38,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="space-y-2">
