@@ -54,7 +54,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <nav className="border-b bg-card" data-tour="navigation">
+    <nav className="border-b bg-card" data-tour="navigation" suppressHydrationWarning>
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">

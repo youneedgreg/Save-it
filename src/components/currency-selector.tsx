@@ -27,11 +27,7 @@ const currencies = [
 ]
 
 export function CurrencySelector() {
-  const { currency, setCurrency, getCurrency } = useCurrency()
-
-  useEffect(() => {
-    setCurrency(getCurrency())
-  }, [getCurrency, setCurrency])
+  const { currency, setCurrency } = useCurrency()
 
   const handleCurrencyChange = (newCurrency: Currency) => {
     setCurrency(newCurrency)
@@ -44,7 +40,7 @@ export function CurrencySelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+        <Button variant="outline" size="sm" className="gap-2 bg-transparent" suppressHydrationWarning>
           <Globe className="h-4 w-4" />
           {currentCurrency?.symbol} {currentCurrency?.code}
         </Button>
