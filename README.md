@@ -117,7 +117,6 @@ Saveit is built with modern web technologies to ensure a robust, scalable, and u
 
 intro with pop ups
 more features
-currency change
 auth
 local storage-pouch db sync to cloud
 responsive, half navbar, half sidebar
