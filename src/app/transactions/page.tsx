@@ -12,19 +12,7 @@ import { formatCurrency } from "@/lib/calculations"
 import type { Transaction } from "@/lib/types"
 import { Plus, Filter, ArrowUpCircle, ArrowDownCircle, Trash2 } from "lucide-react"
 
-const CATEGORIES = [
-  "Salary",
-  "Freelance",
-  "Investment",
-  "Food",
-  "Transportation",
-  "Entertainment",
-  "Utilities",
-  "Healthcare",
-  "Shopping",
-  "Education",
-  "Other",
-]
+const CATEGORIES: string[] = []
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])

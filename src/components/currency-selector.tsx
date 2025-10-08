@@ -11,6 +11,13 @@ const currencies = [
   { code: "KES" as Currency, name: "Kenyan Shilling", symbol: "KSh" },
   { code: "USD" as Currency, name: "US Dollar", symbol: "$" },
   { code: "EUR" as Currency, name: "Euro", symbol: "€" },
+  { code: "GBP" as Currency, name: "British Pound", symbol: "£" },
+  { code: "JPY" as Currency, name: "Japanese Yen", symbol: "¥" },
+  { code: "CAD" as Currency, name: "Canadian Dollar", symbol: "C$" },
+  { code: "AUD" as Currency, name: "Australian Dollar", symbol: "A$" },
+  { code: "CHF" as Currency, name: "Swiss Franc", symbol: "CHF" },
+  { code: "CNY" as Currency, name: "Chinese Yuan", symbol: "¥" },
+  { code: "INR" as Currency, name: "Indian Rupee", symbol: "₹" },
 ]
 
 export function CurrencySelector() {

@@ -79,10 +79,9 @@ export const dashboardTourSteps = isClient ? [
           Set and track your financial goals:
         </p>
         <ul style="font-size: 14px; color: hsl(var(--muted-foreground)); margin: 0; padding-left: 20px;">
-          <li style="margin-bottom: 4px;">Emergency fund</li>
-          <li style="margin-bottom: 4px;">Vacation savings</li>
-          <li style="margin-bottom: 4px;">Major purchases</li>
-          <li style="margin-bottom: 4px;">Investment goals</li>
+          <li style="margin-bottom: 4px;">Set short-term and long-term goals</li>
+          <li style="margin-bottom: 4px;">Track progress towards your financial objectives</li>
+          <li style="margin-bottom: 4px;">Prioritize your savings</li>
         </ul>
       </div>
     `,
@@ -220,7 +219,7 @@ export const budgetsTourSteps = isClient ? [
           Set spending limits and track your progress to stay on top of your finances.
         </p>
         <p style="font-size: 14px; color: hsl(var(--muted-foreground));">
-          Create budgets for different categories like food, transportation, entertainment, and more.
+          Create budgets for different spending categories.
         </p>
       </div>
     `,
