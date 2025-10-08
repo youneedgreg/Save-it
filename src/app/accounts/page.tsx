@@ -48,6 +48,7 @@ export default function AccountsPage() {
       name: formData.name,
       type: formData.type,
       balance: Number.parseFloat(formData.balance) || 0,
+      currency,
       institution: formData.institution || undefined,
       accountNumber: formData.accountNumber || undefined,
     }

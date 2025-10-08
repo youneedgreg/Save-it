@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCurrency } from "@/contexts/currency-context";
 import { getFinancialData, addTransaction, deleteTransaction, updateBudget } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { Transaction } from "@/lib/types"
@@ -15,6 +16,7 @@ import { Plus, Filter, ArrowUpCircle, ArrowDownCircle, Trash2 } from "lucide-rea
 const CATEGORIES: string[] = []
 
 export default function TransactionsPage() {
+  const { currency } = useCurrency();
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -204,7 +206,7 @@ export default function TransactionsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Income</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalIncome)}</div>
+              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalIncome, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -212,7 +214,7 @@ export default function TransactionsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Expenses</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-destructive">{formatCurrency(totalExpenses)}</div>
+              <div className="text-2xl font-bold text-destructive">{formatCurrency(totalExpenses, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -221,7 +223,7 @@ export default function TransactionsPage() {
             </CardHeader>
             <CardContent>
               <div className={`text-2xl font-bold ${netCashFlow >= 0 ? "text-secondary" : "text-destructive"}`}>
-                {formatCurrency(netCashFlow)}
+                {formatCurrency(netCashFlow, currency)}
               </div>
             </CardContent>
           </Card>
@@ -291,7 +293,7 @@ export default function TransactionsPage() {
                       className={`text-lg font-semibold ${transaction.type === "income" ? "text-secondary" : "text-foreground"}`}
                     >
                       {transaction.type === "income" ? "+" : ""}
-                      {formatCurrency(transaction.amount)}
+                      {formatCurrency(transaction.amount, currency)}
                     </p>
                     <Button variant="ghost" size="icon" onClick={() => handleDelete(transaction.id)}>
                       <Trash2 className="h-4 w-4" />

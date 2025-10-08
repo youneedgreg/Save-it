@@ -8,12 +8,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addSavingsGoal, updateSavingsGoal, deleteSavingsGoal } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { SavingsGoal } from "@/lib/types"
 import { Plus, Pencil, Trash2, TrendingUp } from "lucide-react"
 
 export default function SavingsPage() {
+  const { currency } = useCurrency()
   const [goals, setGoals] = useState<SavingsGoal[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isContributeDialogOpen, setIsContributeDialogOpen] = useState(false)
@@ -231,7 +233,7 @@ export default function SavingsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Target</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalTarget)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalTarget, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -239,7 +241,7 @@ export default function SavingsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Saved</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalSaved)}</div>
+              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalSaved, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -247,7 +249,7 @@ export default function SavingsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Remaining</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalRemaining)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalRemaining, currency)}</div>
             </CardContent>
           </Card>
         </div>
@@ -309,7 +311,7 @@ export default function SavingsPage() {
                       <Progress value={Math.min(progress, 100)} className="h-2" />
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {formatCurrency(goal.currentAmount)} of {formatCurrency(goal.targetAmount)}
+                          {formatCurrency(goal.currentAmount, currency)} of {formatCurrency(goal.targetAmount, currency)}
                         </span>
                         <span className={`text-muted-foreground ${isOverdue ? "text-destructive" : ""}`}>
                           {isOverdue ? "Overdue" : `${daysRemaining} days left`}
@@ -328,7 +330,7 @@ export default function SavingsPage() {
                       </Button>
                       <div className="flex-1 text-right">
                         <p className="text-xs text-muted-foreground">Remaining</p>
-                        <p className="text-lg font-bold">{formatCurrency(remaining)}</p>
+                        <p className="text-lg font-bold">{formatCurrency(remaining, currency)}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -373,17 +375,17 @@ export default function SavingsPage() {
                 <div className="p-4 bg-muted rounded-lg space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Current</span>
-                    <span className="font-medium">{formatCurrency(contributingGoal.currentAmount)}</span>
+                    <span className="font-medium">{formatCurrency(contributingGoal.currentAmount, currency)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">After contribution</span>
                     <span className="font-medium">
-                      {formatCurrency(contributingGoal.currentAmount + (Number.parseFloat(contributeAmount) || 0))}
+                      {formatCurrency(contributingGoal.currentAmount + (Number.parseFloat(contributeAmount) || 0), currency)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Target</span>
-                    <span className="font-medium">{formatCurrency(contributingGoal.targetAmount)}</span>
+                    <span className="font-medium">{formatCurrency(contributingGoal.targetAmount, currency)}</span>
                   </div>
                 </div>
               )}

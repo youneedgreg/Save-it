@@ -8,12 +8,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useCurrency } from "@/contexts/currency-context";
 import { getFinancialData, addWishlistItem, updateWishlistItem, deleteWishlistItem } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { WishlistItem } from "@/lib/types"
 import { Pencil, Trash2, Plus, ExternalLink, ShoppingBag, CheckCircle2 } from "lucide-react"
 
 export default function WishlistPage() {
+  const { currency } = useCurrency();
   const [wishlist, setWishlist] = useState<WishlistItem[]>([])
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<WishlistItem | null>(null)
@@ -261,11 +263,11 @@ export default function WishlistPage() {
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Total Value</p>
-          <p className="text-2xl font-bold">{formatCurrency(totalWishlistValue)}</p>
+          <p className="text-2xl font-bold">{formatCurrency(totalWishlistValue, currency)}</p>
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Total Saved</p>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totalSaved)}</p>
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totalSaved, currency)}</p>
         </Card>
       </div>
 
@@ -303,18 +305,18 @@ export default function WishlistPage() {
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Price</span>
-                      <span className="font-semibold">{formatCurrency(item.price)}</span>
+                      <span className="font-semibold">{formatCurrency(item.price, currency)}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Saved</span>
                       <span className="font-semibold text-green-600 dark:text-green-400">
-                        {formatCurrency(item.savedAmount)}
+                        {formatCurrency(item.savedAmount, currency)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Remaining</span>
                       <span className="font-semibold text-orange-600 dark:text-orange-400">
-                        {formatCurrency(remaining)}
+                        {formatCurrency(remaining, currency)}
                       </span>
                     </div>
                   </div>
@@ -373,7 +375,7 @@ export default function WishlistPage() {
                     <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">{formatCurrency(item.price)}</p>
+                      <p className="text-sm text-muted-foreground">{formatCurrency(item.price, currency)}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">

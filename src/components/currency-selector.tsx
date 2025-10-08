@@ -1,7 +1,6 @@
 'use client'
 
 import { Globe } from 'lucide-react'
-import { useEffect } from 'react'
 
 import { useCurrency } from '@/contexts/currency-context'
 import { Button } from '@/components/ui/button'
