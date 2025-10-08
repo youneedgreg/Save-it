@@ -119,5 +119,13 @@ intro with pop ups
 more features
 currency change
 auth
-local storage
+local storage-pouch db sync to cloud
+responsive, half navbar, half sidebar
+pwa
+wishlist adds to spending
+add budget
+add debt
+auto pay bills to spending
+add savings goal
 supabbase integration
+ui-https://github.com/floranguyen0/mmas-money-tracker

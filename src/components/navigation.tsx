@@ -10,7 +10,6 @@ import {
   CreditCard,
   Target,
   TrendingUp,
-  PiggyBank,
   BarChart3,
   Building2,
   Home,
@@ -30,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CurrencySelector } from "./currency-selector"
 import { ThemeToggle } from "./theme-toggle"
+import { TourTrigger } from "./tour-trigger"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -54,7 +54,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <nav className="border-b bg-card">
+    <nav className="border-b bg-card" data-tour="navigation">
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
@@ -108,8 +108,11 @@ export function Navigation() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <ThemeToggle />
+            <div data-tour="theme-toggle">
+              <ThemeToggle />
+            </div>
             <CurrencySelector />
+            <TourTrigger />
           </div>
           <div className="md:hidden flex items-center">
             <button

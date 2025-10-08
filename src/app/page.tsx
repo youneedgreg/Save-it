@@ -40,7 +40,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-tour="dashboard-overview">
           <h1 className="text-4xl font-bold tracking-tight text-balance">Save It</h1>
           <p className="text-muted-foreground text-pretty">
             Take control of your financial future with comprehensive tracking and insights
@@ -73,7 +73,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Debts Overview */}
-        <Card>
+        <Card data-tour="debt-overview">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="h-5 w-5" />
@@ -112,7 +112,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* Savings Goals */}
-        <Card>
+        <Card data-tour="savings-goals">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
@@ -147,7 +147,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* Budget Overview */}
-        <Card>
+        <Card data-tour="budget-tracking">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="h-5 w-5" />
@@ -190,7 +190,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* Recent Transactions */}
-        <Card>
+        <Card data-tour="recent-transactions">
           <CardHeader>
             <CardTitle>Recent Transactions</CardTitle>
             <CardDescription>Your latest financial activity</CardDescription>

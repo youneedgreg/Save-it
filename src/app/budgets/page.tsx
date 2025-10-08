@@ -97,7 +97,7 @@ export default function BudgetsPage() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-              <Button>
+              <Button data-tour="add-budget-button">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Budget
               </Button>
@@ -153,7 +153,7 @@ export default function BudgetsPage() {
           </Dialog>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3" data-tour="budget-summary">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Budget</CardTitle>

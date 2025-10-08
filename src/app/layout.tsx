@@ -1,5 +1,8 @@
 import { Navigation } from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
+import { TourProvider } from "@/contexts/tour-context"
+import { PageTour } from "@/components/page-tour"
+import { TourAnalytics } from "@/components/tour-analytics"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
@@ -47,10 +50,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Suspense fallback={null}>
-            <Navigation />
-            {children}
-          </Suspense>
+          <TourProvider>
+            <Suspense fallback={null}>
+              <Navigation />
+              {children}
+              <PageTour />
+              <TourAnalytics />
+            </Suspense>
+          </TourProvider>
         </ThemeProvider>
       </body>
     </html>

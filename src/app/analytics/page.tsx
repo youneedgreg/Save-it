@@ -84,7 +84,7 @@ export default function AnalyticsPage() {
           <p className="text-muted-foreground">Understand your financial health with data-driven insights</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-tour="financial-metrics">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Savings Rate</CardTitle>
@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4" data-tour="financial-insights">
           <h2 className="text-xl font-semibold">Financial Insights</h2>
           {insights.map((insight, index) => (
             <Alert key={index} variant={insight.type === "warning" ? "destructive" : "default"}>
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
           ))}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2" data-tour="charts">
           <SpendingChart transactions={data.transactions} />
           <IncomeExpenseChart transactions={data.transactions} />
         </div>

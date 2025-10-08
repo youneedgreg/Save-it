@@ -92,14 +92,14 @@ export default function AccountsPage() {
             <h1 className="text-4xl font-bold mb-2">Accounts</h1>
             <p className="text-muted-foreground">Manage your financial accounts and balances</p>
           </div>
-          <Button onClick={() => setShowForm(!showForm)}>
+          <Button onClick={() => setShowForm(!showForm)} data-tour="add-account-button">
             <Plus className="h-4 w-4 mr-2" />
             Add Account
           </Button>
         </div>
 
         <div className="grid gap-6 mb-8">
-          <Card>
+          <Card data-tour="total-balance">
             <CardHeader>
               <CardTitle>Total Balance</CardTitle>
               <CardDescription>Combined balance across all accounts</CardDescription>
