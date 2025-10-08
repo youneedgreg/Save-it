@@ -1,6 +1,7 @@
 import { Navigation } from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
 import { TourProvider } from "@/contexts/tour-context"
+import { CurrencyProvider } from "@/contexts/currency-context"
 import { PageTour } from "@/components/page-tour"
 import { TourAnalytics } from "@/components/tour-analytics"
 import { Geist, Geist_Mono } from "next/font/google"
@@ -50,14 +51,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TourProvider>
-            <Suspense fallback={null}>
-              <Navigation />
-              {children}
-              <PageTour />
-              <TourAnalytics />
-            </Suspense>
-          </TourProvider>
+          <CurrencyProvider>
+            <TourProvider>
+              <Suspense fallback={null}>
+                <Navigation />
+                {children}
+                <PageTour />
+                <TourAnalytics />
+              </Suspense>
+            </TourProvider>
+          </CurrencyProvider>
         </ThemeProvider>
       </body>
     </html>

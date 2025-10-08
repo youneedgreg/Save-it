@@ -24,11 +24,18 @@ export const calculateMonthlyIncome = (transactions: Transaction[]): number => {
     .reduce((sum, t) => sum + t.amount, 0)
 }
 
-export const formatCurrency = (amount: number, currency: Currency = "KES"): string => {
+export const formatCurrency = (amount: number, currency: Currency): string => {
   const currencyConfig = {
     KES: { locale: "en-KE", currency: "KES" },
     USD: { locale: "en-US", currency: "USD" },
-    EUR: { locale: "en-EU", currency: "EUR" },
+    EUR: { locale: "de-DE", currency: "EUR" },
+    GBP: { locale: "en-GB", currency: "GBP" },
+    JPY: { locale: "ja-JP", currency: "JPY" },
+    CAD: { locale: "en-CA", currency: "CAD" },
+    AUD: { locale: "en-AU", currency: "AUD" },
+    CHF: { locale: "de-CH", currency: "CHF" },
+    CNY: { locale: "zh-CN", currency: "CNY" },
+    INR: { locale: "en-IN", currency: "INR" },
   }
 
   const config = currencyConfig[currency]

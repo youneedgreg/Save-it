@@ -6,11 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { SpendingChart } from "@/components/spending-chart"
 import { IncomeExpenseChart } from "@/components/income-expense-chart"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData } from "@/lib/storage"
 import { formatCurrency, calculateNetWorth, calculateMonthlyExpenses, calculateMonthlyIncome } from "@/lib/calculations"
 import type { FinancialData } from "@/lib/types"
 
 export default function AnalyticsPage() {
+  const { currency } = useCurrency()
   const [data, setData] = useState<FinancialData | null>(null)
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export default function AnalyticsPage() {
     insights.push({
       type: "success",
       title: "Positive Net Worth",
-      description: `Your net worth is ${formatCurrency(netWorth)}. Keep up the great work!`,
+      description: `Your net worth is ${formatCurrency(netWorth, currency)}. Keep up the great work!`,
     })
   }
 
@@ -112,7 +114,7 @@ export default function AnalyticsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Avg Daily Spending</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(avgDailySpending)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(avgDailySpending, currency)}</div>
               <p className="text-xs text-muted-foreground mt-1">Based on this month</p>
             </CardContent>
           </Card>
@@ -121,7 +123,7 @@ export default function AnalyticsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Projected Monthly</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(projectedMonthlySpending)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(projectedMonthlySpending, currency)}</div>
               <p className="text-xs text-muted-foreground mt-1">At current rate</p>
             </CardContent>
           </Card>

@@ -11,12 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addBill, updateBill, deleteBill } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { Bill } from "@/lib/types"
 import { Pencil, Trash2, Plus, Bell, Calendar } from "lucide-react"
 
 export default function BillsPage() {
+  const { currency } = useCurrency()
   const [bills, setBills] = useState<Bill[]>([])
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [editingBill, setEditingBill] = useState<Bill | null>(null)
@@ -276,7 +278,7 @@ export default function BillsPage() {
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Monthly Total</p>
-          <p className="text-2xl font-bold">{formatCurrency(calculateMonthlyTotal())}</p>
+          <p className="text-2xl font-bold">{formatCurrency(calculateMonthlyTotal(), currency)}</p>
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Upcoming (7 days)</p>
@@ -301,7 +303,7 @@ export default function BillsPage() {
                       Due in {daysUntil} {daysUntil === 1 ? "day" : "days"}
                     </p>
                   </div>
-                  <p className="font-semibold">{formatCurrency(bill.amount)}</p>
+                  <p className="font-semibold">{formatCurrency(bill.amount, currency)}</p>
                 </div>
               )
             })}
@@ -349,7 +351,7 @@ export default function BillsPage() {
                 <div className="grid gap-4 md:grid-cols-3 mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Amount</p>
-                    <p className="text-xl font-semibold">{formatCurrency(bill.amount)}</p>
+                    <p className="text-xl font-semibold">{formatCurrency(bill.amount, currency)}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Next Due Date</p>

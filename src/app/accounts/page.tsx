@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, Trash2, Building2, Wallet, Smartphone, TrendingUp, MoreHorizontal } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addAccount, updateAccount, deleteAccount } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { Account } from "@/lib/types"
@@ -20,6 +21,7 @@ const accountIcons = {
 }
 
 export default function AccountsPage() {
+  const { currency } = useCurrency()
   const [accounts, setAccounts] = useState<Account[]>([])
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -46,7 +48,6 @@ export default function AccountsPage() {
       name: formData.name,
       type: formData.type,
       balance: Number.parseFloat(formData.balance) || 0,
-      currency: getFinancialData().currency,
       institution: formData.institution || undefined,
       accountNumber: formData.accountNumber || undefined,
     }
@@ -105,7 +106,7 @@ export default function AccountsPage() {
               <CardDescription>Combined balance across all accounts</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-4xl font-bold text-primary">{formatCurrency(totalBalance)}</p>
+              <p className="text-4xl font-bold text-primary">{formatCurrency(totalBalance, currency)}</p>
             </CardContent>
           </Card>
         </div>
@@ -215,7 +216,7 @@ export default function AccountsPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold mb-4">{formatCurrency(account.balance)}</p>
+                  <p className="text-2xl font-bold mb-4">{formatCurrency(account.balance, currency)}</p>
                   {account.institution && (
                     <p className="text-sm text-muted-foreground mb-1">
                       <span className="font-medium">Institution:</span> {account.institution}

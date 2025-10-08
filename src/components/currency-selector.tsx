@@ -1,15 +1,21 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { Globe } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { getCurrency, setCurrency } from "@/lib/storage"
-import type { Currency } from "@/lib/types"
+import { Globe } from 'lucide-react'
+import { useEffect } from 'react'
+
+import { useCurrency } from '@/contexts/currency-context'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { Currency } from '@/lib/types'
 
 const currencies = [
-  { code: "KES" as Currency, name: "Kenyan Shilling", symbol: "KSh" },
-  { code: "USD" as Currency, name: "US Dollar", symbol: "$" },
+  { code: 'KES' as Currency, name: 'Kenyan Shilling', symbol: 'KSh' },
+  { code: 'USD' as Currency, name: 'US Dollar', symbol: '$' },
   { code: "EUR" as Currency, name: "Euro", symbol: "€" },
   { code: "GBP" as Currency, name: "British Pound", symbol: "£" },
   { code: "JPY" as Currency, name: "Japanese Yen", symbol: "¥" },
@@ -21,15 +27,14 @@ const currencies = [
 ]
 
 export function CurrencySelector() {
-  const [currency, setCurrencyState] = useState<Currency>("KES")
+  const { currency, setCurrency, getCurrency } = useCurrency()
 
   useEffect(() => {
-    setCurrencyState(getCurrency())
-  }, [])
+    setCurrency(getCurrency())
+  }, [getCurrency, setCurrency])
 
   const handleCurrencyChange = (newCurrency: Currency) => {
     setCurrency(newCurrency)
-    setCurrencyState(newCurrency)
     // Reload the page to update all currency displays
     window.location.reload()
   }

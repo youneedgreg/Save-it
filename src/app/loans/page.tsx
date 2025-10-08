@@ -10,12 +10,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addLoanGiven, updateLoanGiven, deleteLoanGiven } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { LoanGiven } from "@/lib/types"
 import { Pencil, Trash2, Plus } from "lucide-react"
 
 export default function LoansPage() {
+  const { currency } = useCurrency()
   const [loans, setLoans] = useState<LoanGiven[]>([])
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [editingLoan, setEditingLoan] = useState<LoanGiven | null>(null)
@@ -232,15 +234,15 @@ export default function LoansPage() {
       <div className="grid gap-4 md:grid-cols-3 mb-6">
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Total Lent</p>
-          <p className="text-2xl font-bold">{formatCurrency(totalLent)}</p>
+          <p className="text-2xl font-bold">{formatCurrency(totalLent, currency)}</p>
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Total Repaid</p>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totalRepaid)}</p>
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totalRepaid, currency)}</p>
         </Card>
         <Card className="p-6">
           <p className="text-sm text-muted-foreground mb-1">Outstanding</p>
-          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totalOutstanding)}</p>
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totalOutstanding, currency)}</p>
         </Card>
       </div>
 
@@ -276,17 +278,17 @@ export default function LoansPage() {
                 <div className="grid gap-4 md:grid-cols-2 mb-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Loan Amount</p>
-                    <p className="text-lg font-semibold">{formatCurrency(loan.amount)}</p>
+                    <p className="text-lg font-semibold">{formatCurrency(loan.amount, currency)}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Amount Repaid</p>
                     <p className="text-lg font-semibold text-green-600 dark:text-green-400">
-                      {formatCurrency(loan.amountRepaid)}
+                      {formatCurrency(loan.amountRepaid, currency)}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Remaining</p>
-                    <p className="text-lg font-semibold">{formatCurrency(remaining)}</p>
+                    <p className="text-lg font-semibold">{formatCurrency(remaining, currency)}</p>
                   </div>
                   {loan.interestRate && (
                     <div>

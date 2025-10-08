@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addDebt, updateDebt, deleteDebt } from "@/lib/storage"
 import { formatCurrency, calculateDebtPayoffMonths } from "@/lib/calculations"
 import type { Debt } from "@/lib/types"
@@ -15,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Plus, Pencil, Trash2, AlertCircle } from "lucide-react"
 
 export default function DebtsPage() {
+  const { currency } = useCurrency()
   const [debts, setDebts] = useState<Debt[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingDebt, setEditingDebt] = useState<Debt | null>(null)
@@ -255,7 +257,7 @@ export default function DebtsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Debt</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-destructive">{formatCurrency(totalDebt)}</div>
+              <div className="text-2xl font-bold text-destructive">{formatCurrency(totalDebt, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -263,7 +265,7 @@ export default function DebtsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Paid</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalPaid)}</div>
+              <div className="text-2xl font-bold text-secondary">{formatCurrency(totalPaid, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -331,7 +333,7 @@ export default function DebtsPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
                         <p className="text-sm text-muted-foreground">Remaining</p>
-                        <p className="text-lg font-bold text-destructive">{formatCurrency(debt.remainingAmount)}</p>
+                        <p className="text-lg font-bold text-destructive">{formatCurrency(debt.remainingAmount, currency)}</p>
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Interest Rate</p>
@@ -339,7 +341,7 @@ export default function DebtsPage() {
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Min. Payment</p>
-                        <p className="text-lg font-bold">{formatCurrency(debt.minimumPayment)}</p>
+                        <p className="text-lg font-bold">{formatCurrency(debt.minimumPayment, currency)}</p>
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Payoff Time</p>
@@ -356,7 +358,7 @@ export default function DebtsPage() {
                       <Progress value={progress} className="h-2" />
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                          {formatCurrency(debt.totalAmount - debt.remainingAmount)} paid
+                          {formatCurrency(debt.totalAmount - debt.remainingAmount, currency)} paid
                         </span>
                         <span className="text-muted-foreground">Due: {dueDate.toLocaleDateString()}</span>
                       </div>

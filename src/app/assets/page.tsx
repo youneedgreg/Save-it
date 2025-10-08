@@ -21,6 +21,7 @@ import {
   CreditCard,
   FileText,
 } from "lucide-react"
+import { useCurrency } from "@/contexts/currency-context"
 import {
   getFinancialData,
   addAsset,
@@ -51,6 +52,7 @@ const liabilityIcons = {
 }
 
 export default function AssetsPage() {
+  const { currency } = useCurrency()
   const [assets, setAssets] = useState<Asset[]>([])
   const [liabilities, setLiabilities] = useState<Liability[]>([])
   const [showAssetForm, setShowAssetForm] = useState(false)
@@ -151,7 +153,7 @@ export default function AssetsPage() {
               <CardDescription>Value of everything you own</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-secondary">{formatCurrency(totalAssets)}</p>
+              <p className="text-3xl font-bold text-secondary">{formatCurrency(totalAssets, currency)}</p>
             </CardContent>
           </Card>
           <Card>
@@ -160,7 +162,7 @@ export default function AssetsPage() {
               <CardDescription>Total amount you owe</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-destructive">{formatCurrency(totalLiabilities)}</p>
+              <p className="text-3xl font-bold text-destructive">{formatCurrency(totalLiabilities, currency)}</p>
             </CardContent>
           </Card>
           <Card>
@@ -170,7 +172,7 @@ export default function AssetsPage() {
             </CardHeader>
             <CardContent>
               <p className={`text-3xl font-bold ${netWorth >= 0 ? "text-primary" : "text-destructive"}`}>
-                {formatCurrency(netWorth)}
+                {formatCurrency(netWorth, currency)}
               </p>
             </CardContent>
           </Card>
@@ -296,7 +298,7 @@ export default function AssetsPage() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-2xl font-bold mb-2">{formatCurrency(asset.value)}</p>
+                      <p className="text-2xl font-bold mb-2">{formatCurrency(asset.value, currency)}</p>
                       {asset.purchaseDate && (
                         <p className="text-sm text-muted-foreground mb-1">
                           Purchased: {new Date(asset.purchaseDate).toLocaleDateString()}
@@ -494,13 +496,13 @@ export default function AssetsPage() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-2xl font-bold mb-2 text-destructive">{formatCurrency(liability.amount)}</p>
+                      <p className="text-2xl font-bold mb-2 text-destructive">{formatCurrency(liability.amount, currency)}</p>
                       {liability.interestRate && (
                         <p className="text-sm text-muted-foreground mb-1">Interest Rate: {liability.interestRate}%</p>
                       )}
                       {liability.monthlyPayment && (
                         <p className="text-sm text-muted-foreground mb-1">
-                          Monthly Payment: {formatCurrency(liability.monthlyPayment)}
+                          Monthly Payment: {formatCurrency(liability.monthlyPayment, currency)}
                         </p>
                       )}
                       {liability.dueDate && (

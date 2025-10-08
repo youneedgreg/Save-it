@@ -6,6 +6,7 @@ import { StatCard } from "@/components/stat-card"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { getFinancialData } from "@/lib/storage"
+import { useCurrency } from "@/contexts/currency-context"
 import {
   calculateNetWorth,
   calculateMonthlyExpenses,
@@ -16,6 +17,7 @@ import {
 import type { FinancialData } from "@/lib/types"
 
 export default function DashboardPage() {
+  const { currency } = useCurrency()
   const [data, setData] = useState<FinancialData | null>(null)
 
   useEffect(() => {
@@ -51,22 +53,22 @@ export default function DashboardPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <StatCard
             title="Net Worth"
-            value={formatCurrency(netWorth)}
+            value={formatCurrency(netWorth, currency)}
             icon={Wallet}
             trend={{
-              value: formatCurrency(450),
+              value: formatCurrency(450, currency),
               positive: true,
             }}
           />
           <StatCard
             title="Monthly Income"
-            value={formatCurrency(monthlyIncome)}
+            value={formatCurrency(monthlyIncome, currency)}
             icon={TrendingUp}
             description="Current month"
           />
           <StatCard
             title="Monthly Expenses"
-            value={formatCurrency(monthlyExpenses)}
+            value={formatCurrency(monthlyExpenses, currency)}
             icon={TrendingDown}
             description="Current month"
           />
@@ -79,7 +81,7 @@ export default function DashboardPage() {
               <CreditCard className="h-5 w-5" />
               Debt Overview
             </CardTitle>
-            <CardDescription>Total debt: {formatCurrency(totalDebt)}</CardDescription>
+            <CardDescription>Total debt: {formatCurrency(totalDebt, currency)}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {data.debts.map((debt) => {
@@ -96,7 +98,7 @@ export default function DashboardPage() {
                     <div>
                       <p className="font-medium">{debt.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatCurrency(debt.remainingAmount)} remaining • {debt.interestRate}% APR
+                        {formatCurrency(debt.remainingAmount, currency)} remaining • {debt.interestRate}% APR
                       </p>
                     </div>
                     <div className="text-right">
@@ -118,7 +120,7 @@ export default function DashboardPage() {
               <Target className="h-5 w-5" />
               Savings Goals
             </CardTitle>
-            <CardDescription>Total saved: {formatCurrency(totalSavings)}</CardDescription>
+            <CardDescription>Total saved: {formatCurrency(totalSavings, currency)}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {data.savingsGoals.map((goal) => {
@@ -131,12 +133,12 @@ export default function DashboardPage() {
                     <div>
                       <p className="font-medium">{goal.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatCurrency(goal.currentAmount)} of {formatCurrency(goal.targetAmount)}
+                        {formatCurrency(goal.currentAmount, currency)} of {formatCurrency(goal.targetAmount, currency)}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium">{progress.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">{formatCurrency(remaining)} to go</p>
+                      <p className="text-xs text-muted-foreground">{formatCurrency(remaining, currency)} to go</p>
                     </div>
                   </div>
                   <Progress value={progress} className="h-2" />
@@ -167,7 +169,7 @@ export default function DashboardPage() {
                     <div>
                       <p className="font-medium">{budget.category}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatCurrency(budget.spent)} of {formatCurrency(budget.limit)}
+                        {formatCurrency(budget.spent, currency)} of {formatCurrency(budget.limit, currency)}
                       </p>
                     </div>
                     <div className="text-right">
@@ -175,7 +177,7 @@ export default function DashboardPage() {
                         {progress.toFixed(1)}%
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {isOverBudget ? "Over budget!" : `${formatCurrency(remaining)} left`}
+                        {isOverBudget ? "Over budget!" : `${formatCurrency(remaining, currency)} left`}
                       </p>
                     </div>
                   </div>
@@ -209,7 +211,7 @@ export default function DashboardPage() {
                     className={`font-semibold ${transaction.type === "income" ? "text-secondary" : "text-foreground"}`}
                   >
                     {transaction.type === "income" ? "+" : ""}
-                    {formatCurrency(transaction.amount)}
+                    {formatCurrency(transaction.amount, currency)}
                   </p>
                 </div>
               ))}

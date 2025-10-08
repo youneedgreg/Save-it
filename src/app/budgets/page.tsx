@@ -8,12 +8,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCurrency } from "@/contexts/currency-context"
 import { getFinancialData, addBudget, updateBudget, deleteBudget } from "@/lib/storage"
 import { formatCurrency } from "@/lib/calculations"
 import type { Budget } from "@/lib/types"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
 export default function BudgetsPage() {
+  const { currency } = useCurrency()
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingBudget, setEditingBudget] = useState<Budget | null>(null)
@@ -159,7 +161,7 @@ export default function BudgetsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Budget</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalBudget)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalBudget, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -167,7 +169,7 @@ export default function BudgetsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Spent</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalSpent)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalSpent, currency)}</div>
             </CardContent>
           </Card>
           <Card>
@@ -175,7 +177,7 @@ export default function BudgetsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Remaining</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalBudget - totalSpent)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(totalBudget - totalSpent, currency)}</div>
             </CardContent>
           </Card>
         </div>
@@ -208,11 +210,11 @@ export default function BudgetsPage() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Spent</span>
-                      <span className="font-medium">{formatCurrency(budget.spent)}</span>
+                      <span className="font-medium">{formatCurrency(budget.spent, currency)}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Limit</span>
-                      <span className="font-medium">{formatCurrency(budget.limit)}</span>
+                      <span className="font-medium">{formatCurrency(budget.limit, currency)}</span>
                     </div>
                     <Progress
                       value={Math.min(progress, 100)}
@@ -223,7 +225,7 @@ export default function BudgetsPage() {
                         {progress.toFixed(1)}%
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        {isOverBudget ? "Over budget!" : `${formatCurrency(remaining)} left`}
+                        {isOverBudget ? "Over budget!" : `${formatCurrency(remaining, currency)} left`}
                       </span>
                     </div>
                   </div>
