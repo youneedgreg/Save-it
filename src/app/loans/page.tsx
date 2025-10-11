@@ -119,7 +119,7 @@ export default function LoansPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <div className="container mx-auto p-6 max-w-7xl" suppressHydrationWarning>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-balance">Loans Given Out</h1>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>

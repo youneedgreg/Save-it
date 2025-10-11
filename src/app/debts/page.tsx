@@ -20,6 +20,7 @@ export default function DebtsPage() {
   const [debts, setDebts] = useState<Debt[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingDebt, setEditingDebt] = useState<Debt | null>(null)
+  const [dueSoonDebts, setDueSoonDebts] = useState<Set<string>>(new Set())
   const [formData, setFormData] = useState({
     name: "",
     totalAmount: "",
@@ -38,6 +39,18 @@ export default function DebtsPage() {
   useEffect(() => {
     loadDebts()
   }, [])
+
+  useEffect(() => {
+    const newDueSoonDebts = new Set<string>()
+    debts.forEach((debt) => {
+      const dueDate = new Date(debt.dueDate)
+      const daysUntilDue = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+      if (daysUntilDue <= 7 && daysUntilDue >= 0) {
+        newDueSoonDebts.add(debt.id)
+      }
+    })
+    setDueSoonDebts(newDueSoonDebts)
+  }, [debts])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -133,14 +146,14 @@ export default function DebtsPage() {
   const totalOriginal = debts.reduce((sum, d) => sum + d.totalAmount, 0)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" suppressHydrationWarning>
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Debt Management</h1>
             <p className="text-muted-foreground">Track and manage your debts with payoff strategies</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
@@ -301,8 +314,7 @@ export default function DebtsPage() {
                 debt.interestRate,
               )
               const dueDate = new Date(debt.dueDate)
-              const daysUntilDue = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-              const isDueSoon = daysUntilDue <= 7 && daysUntilDue >= 0
+              const isDueSoon = dueSoonDebts.has(debt.id)
 
               return (
                 <Card key={debt.id}>

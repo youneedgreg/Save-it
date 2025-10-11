@@ -39,7 +39,7 @@ export default function DashboardPage() {
   const totalSavings = data.savingsGoals.reduce((sum, goal) => sum + goal.currentAmount, 0)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" suppressHydrationWarning>
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="space-y-2" data-tour="dashboard-overview">

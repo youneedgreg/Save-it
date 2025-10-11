@@ -26,6 +26,8 @@ import type {
   export const setCurrency = (currency: Currency): void => {
     if (typeof window === "undefined") return
     localStorage.setItem(CURRENCY_KEY, currency)
+    // Also set cookie for SSR consistency
+    document.cookie = `${CURRENCY_KEY}=${currency}; path=/; max-age=31536000` // 1 year
   }
   
   export const getFinancialData = (): FinancialData => {

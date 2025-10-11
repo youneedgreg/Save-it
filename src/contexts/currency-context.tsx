@@ -11,12 +11,14 @@ interface CurrencyContextType {
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
 
-export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<Currency>("KES")
+export function CurrencyProvider({ children, initialCurrency }: { children: ReactNode, initialCurrency?: Currency }) {
+  const [currency, setCurrencyState] = useState<Currency>(initialCurrency || "KES")
 
   useEffect(() => {
-    setCurrencyState(getCurrency())
-  }, [])
+    if (!initialCurrency) {
+      setCurrencyState(getCurrency())
+    }
+  }, [initialCurrency])
 
   const handleSetCurrency = (newCurrency: Currency) => {
     setCurrency(newCurrency)

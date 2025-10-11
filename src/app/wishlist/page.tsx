@@ -133,7 +133,7 @@ export default function WishlistPage() {
   const totalSaved = activeItems.reduce((sum, item) => sum + item.savedAmount, 0)
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <div className="container mx-auto p-6 max-w-7xl" suppressHydrationWarning>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-balance">Wants Wishlist</h1>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>

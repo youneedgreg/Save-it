@@ -6,6 +6,8 @@ import { PageTour } from "@/components/page-tour"
 import { TourAnalytics } from "@/components/tour-analytics"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
+import { cookies } from "next/headers"
+import type { Currency } from "@/lib/types"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -35,11 +37,14 @@ export const metadata = {
   manifest: "/site.webmanifest",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = await cookies()
+  const currency = (cookieStore.get('money-mastery-currency')?.value as Currency) || "KES"
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -51,7 +56,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <CurrencyProvider>
+          <CurrencyProvider initialCurrency={currency}>
             <TourProvider>
               <Suspense fallback={null}>
                 <Navigation />

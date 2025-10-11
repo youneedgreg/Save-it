@@ -120,6 +120,7 @@ more features
 auth
 local storage-pouch db sync to cloud
 responsive, half navbar, half sidebar
+live conversions
 pwa
 wishlist adds to spending
 add budget
