@@ -123,8 +123,6 @@ responsive, half navbar, half sidebar
 live conversions
 pwa
 wishlist adds to spending
-add budget
-add debt
 auto pay bills to spending
 add savings goal
 supabbase integration

@@ -57,9 +57,7 @@ export default function BudgetsPage() {
       })
     }
 
-    setFormData({ category: "", limit: "", period: "monthly" })
-    setEditingBudget(null)
-    setIsDialogOpen(false)
+    handleOpenChange(false)
     loadBudgets()
   }
 
@@ -70,7 +68,7 @@ export default function BudgetsPage() {
       limit: budget.limit.toString(),
       period: budget.period,
     })
-    setIsDialogOpen(true)
+    handleOpenChange(true)
   }
 
   const handleDelete = (id: string) => {
@@ -80,10 +78,12 @@ export default function BudgetsPage() {
     }
   }
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false)
-    setEditingBudget(null)
-    setFormData({ category: "", limit: "", period: "monthly" })
+  const handleOpenChange = (open: boolean) => {
+    setIsDialogOpen(open)
+    if (!open) {
+      setEditingBudget(null)
+      setFormData({ category: "", limit: "", period: "monthly" })
+    }
   }
 
   const totalBudget = budgets.reduce((sum, b) => sum + b.limit, 0)
@@ -97,7 +97,7 @@ export default function BudgetsPage() {
             <h1 className="text-3xl font-bold tracking-tight">Budget Tracking</h1>
             <p className="text-muted-foreground">Manage your spending limits and track progress</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
+          <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
               <Button data-tour="add-budget-button">
                 <Plus className="h-4 w-4 mr-2" />
@@ -239,7 +239,7 @@ export default function BudgetsPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <p className="text-muted-foreground mb-4">No budgets yet. Create your first budget to start tracking!</p>
-              <Button onClick={() => setIsDialogOpen(true)}>
+              <Button onClick={() => handleOpenChange(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Your First Budget
               </Button>
