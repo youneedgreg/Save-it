@@ -127,20 +127,6 @@ export default function DebtsPage() {
     }
   }
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false)
-    setEditingDebt(null)
-    setFormData({
-      name: "",
-      totalAmount: "",
-      remainingAmount: "",
-      interestRate: "",
-      minimumPayment: "",
-      dueDate: "",
-      type: "credit-card",
-    })
-  }
-
   const totalDebt = debts.reduce((sum, d) => sum + d.remainingAmount, 0)
   const totalPaid = debts.reduce((sum, d) => sum + (d.totalAmount - d.remainingAmount), 0)
   const totalOriginal = debts.reduce((sum, d) => sum + d.totalAmount, 0)
