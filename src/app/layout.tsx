@@ -1,9 +1,6 @@
 import { Navigation } from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
-import { TourProvider } from "@/contexts/tour-context"
 import { CurrencyProvider } from "@/contexts/currency-context"
-import { PageTour } from "@/components/page-tour"
-import { TourAnalytics } from "@/components/tour-analytics"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
 import { cookies } from "next/headers"
@@ -57,14 +54,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <CurrencyProvider initialCurrency={currency}>
-            <TourProvider>
               <Suspense fallback={null}>
                 <Navigation />
                 {children}
-                <PageTour />
-                <TourAnalytics />
               </Suspense>
-            </TourProvider>
           </CurrencyProvider>
         </ThemeProvider>
       </body>

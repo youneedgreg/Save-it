@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CurrencySelector } from "./currency-selector"
 import { ThemeToggle } from "./theme-toggle"
-import { TourTrigger } from "./tour-trigger"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -112,7 +111,6 @@ export function Navigation() {
               <ThemeToggle />
             </div>
             <CurrencySelector />
-            <TourTrigger />
           </div>
           <div className="md:hidden flex items-center">
             <button
