@@ -128,3 +128,4 @@ supabase integration
 reminders for savings and paying debts and stuff
 ui-https://github.com/floranguyen0/mmas-money-tracker
 more features
+customizable navbar
