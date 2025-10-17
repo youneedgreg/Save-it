@@ -18,7 +18,7 @@ export function SpendingChart({ transactions }: SpendingChartProps) {
         if (!acc[category]) {
           acc[category] = 0
         }
-        acc[category] += Math.abs(t.amount)
+        acc[category] += t.amount
         return acc
       },
       {} as Record<string, number>,

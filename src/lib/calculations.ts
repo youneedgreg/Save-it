@@ -12,7 +12,7 @@ export const calculateMonthlyExpenses = (transactions: Transaction[]): number =>
 
   return transactions
     .filter((t) => t.type === "expense" && new Date(t.date) >= firstDayOfMonth)
-    .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+    .reduce((sum, t) => sum + t.amount, 0)
 }
 
 export const calculateMonthlyIncome = (transactions: Transaction[]): number => {

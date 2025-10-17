@@ -26,11 +26,11 @@ export function IncomeExpenseChart({ transactions }: IncomeExpenseChartProps) {
       return tDate.getMonth() === monthIndex && tDate.getFullYear() === year
     })
 
-    const income = monthTransactions.filter((t) => t.type === "income").reduce((sum, t) => sum + Math.abs(t.amount), 0)
+    const income = monthTransactions.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0)
 
     const expenses = monthTransactions
       .filter((t) => t.type === "expense")
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      .reduce((sum, t) => sum + t.amount, 0)
 
     return {
       month,

@@ -13,7 +13,7 @@ import { formatCurrency } from "@/lib/calculations"
 import type { Transaction } from "@/lib/types"
 import { Plus, Filter, ArrowUpCircle, ArrowDownCircle, Trash2 } from "lucide-react"
 
-const CATEGORIES: string[] = []
+const CATEGORIES: string[] = ["Food", "Transport", "Entertainment", "Bills", "Health", "Shopping", "Other"]
 
 export default function TransactionsPage() {
   const { currency } = useCurrency();
@@ -62,11 +62,9 @@ export default function TransactionsPage() {
       return
     }
 
-    const finalAmount = formData.type === "expense" ? -Math.abs(amount) : Math.abs(amount)
-
     addTransaction({
       description: formData.description,
-      amount: finalAmount,
+      amount: amount,
       category: formData.category,
       type: formData.type,
       date: new Date(formData.date).toISOString(),
@@ -78,7 +76,7 @@ export default function TransactionsPage() {
       const budget = data.budgets.find((b) => b.category === formData.category)
       if (budget) {
         updateBudget(budget.id, {
-          spent: budget.spent + Math.abs(amount),
+          spent: budget.spent + amount,
         })
       }
     }
@@ -101,9 +99,9 @@ export default function TransactionsPage() {
     }
   }
 
-  const totalIncome = transactions.filter((t) => t.type === "income").reduce((sum, t) => sum + Math.abs(t.amount), 0)
+  const totalIncome = transactions.filter((t) => t.type === "income").reduce((sum, t) => sum + t.amount, 0)
 
-  const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + Math.abs(t.amount), 0)
+  const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + t.amount, 0)
 
   const netCashFlow = totalIncome - totalExpenses
 

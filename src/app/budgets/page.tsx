@@ -14,6 +14,8 @@ import { formatCurrency } from "@/lib/calculations"
 import type { Budget } from "@/lib/types"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
+const CATEGORIES: string[] = ["Food", "Transport", "Entertainment", "Bills", "Health", "Shopping", "Other"]
+
 export default function BudgetsPage() {
   const { currency } = useCurrency()
   const [budgets, setBudgets] = useState<Budget[]>([])
@@ -111,13 +113,21 @@ export default function BudgetsPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    placeholder="e.g., Food, Transportation"
+                  <Select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    required
-                  />
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="limit">Budget Limit</Label>
