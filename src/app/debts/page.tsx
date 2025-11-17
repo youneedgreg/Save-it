@@ -25,8 +25,8 @@ export default function DebtsPage() {
     name: "",
     totalAmount: "",
     remainingAmount: "",
-    interestRate: "",
-    minimumPayment: "",
+    interestRate: "0",
+    minimumPayment: "0",
     dueDate: "",
     type: "credit-card" as "credit-card" | "loan" | "mortgage" | "other",
   })
@@ -43,10 +43,12 @@ export default function DebtsPage() {
   useEffect(() => {
     const newDueSoonDebts = new Set<string>()
     debts.forEach((debt) => {
-      const dueDate = new Date(debt.dueDate)
-      const daysUntilDue = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-      if (daysUntilDue <= 7 && daysUntilDue >= 0) {
-        newDueSoonDebts.add(debt.id)
+      if (debt.dueDate) {
+        const dueDate = new Date(debt.dueDate)
+        const daysUntilDue = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+        if (daysUntilDue <= 7 && daysUntilDue >= 0) {
+          newDueSoonDebts.add(debt.id)
+        }
       }
     })
     setDueSoonDebts(newDueSoonDebts)
@@ -64,40 +66,33 @@ export default function DebtsPage() {
       isNaN(totalAmount) ||
       isNaN(remainingAmount) ||
       isNaN(interestRate) ||
-      isNaN(minimumPayment) ||
-      !formData.dueDate
+      isNaN(minimumPayment)
     ) {
       return
     }
 
+    const debtData = {
+      name: formData.name,
+      totalAmount,
+      remainingAmount,
+      interestRate,
+      minimumPayment,
+      dueDate: formData.dueDate || undefined,
+      type: formData.type,
+    }
+
     if (editingDebt) {
-      updateDebt(editingDebt.id, {
-        name: formData.name,
-        totalAmount,
-        remainingAmount,
-        interestRate,
-        minimumPayment,
-        dueDate: formData.dueDate,
-        type: formData.type,
-      })
+      updateDebt(editingDebt.id, debtData)
     } else {
-      addDebt({
-        name: formData.name,
-        totalAmount,
-        remainingAmount,
-        interestRate,
-        minimumPayment,
-        dueDate: formData.dueDate,
-        type: formData.type,
-      })
+      addDebt(debtData)
     }
 
     setFormData({
       name: "",
       totalAmount: "",
       remainingAmount: "",
-      interestRate: "",
-      minimumPayment: "",
+      interestRate: "0",
+      minimumPayment: "0",
       dueDate: "",
       type: "credit-card",
     })
@@ -114,7 +109,7 @@ export default function DebtsPage() {
       remainingAmount: debt.remainingAmount.toString(),
       interestRate: debt.interestRate.toString(),
       minimumPayment: debt.minimumPayment.toString(),
-      dueDate: debt.dueDate,
+      dueDate: debt.dueDate || "",
       type: debt.type,
     })
     setIsDialogOpen(true)
@@ -125,6 +120,15 @@ export default function DebtsPage() {
       deleteDebt(id)
       loadDebts()
     }
+  }
+
+  const handleTotalAmountChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      totalAmount: value,
+      // Auto-fill remaining amount if it's empty
+      remainingAmount: prev.remainingAmount === "" ? value : prev.remainingAmount,
+    }))
   }
 
   const totalDebt = debts.reduce((sum, d) => sum + d.remainingAmount, 0)
@@ -189,7 +193,7 @@ export default function DebtsPage() {
                       step="0.01"
                       placeholder="0.00"
                       value={formData.totalAmount}
-                      onChange={(e) => setFormData({ ...formData, totalAmount: e.target.value })}
+                      onChange={(e) => handleTotalAmountChange(e.target.value)}
                       required
                     />
                   </div>
@@ -208,7 +212,7 @@ export default function DebtsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="interestRate">Interest Rate (%)</Label>
+                    <Label htmlFor="interestRate">Interest Rate (%) - Optional</Label>
                     <Input
                       id="interestRate"
                       type="number"
@@ -216,11 +220,10 @@ export default function DebtsPage() {
                       placeholder="0.00"
                       value={formData.interestRate}
                       onChange={(e) => setFormData({ ...formData, interestRate: e.target.value })}
-                      required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="minimumPayment">Minimum Payment</Label>
+                    <Label htmlFor="minimumPayment">Minimum Payment - Optional</Label>
                     <Input
                       id="minimumPayment"
                       type="number"
@@ -228,18 +231,16 @@ export default function DebtsPage() {
                       placeholder="0.00"
                       value={formData.minimumPayment}
                       onChange={(e) => setFormData({ ...formData, minimumPayment: e.target.value })}
-                      required
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dueDate">Next Due Date</Label>
+                  <Label htmlFor="dueDate">Next Due Date - Optional</Label>
                   <Input
                     id="dueDate"
                     type="date"
                     value={formData.dueDate}
                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    required
                   />
                 </div>
                 <Button type="submit" className="w-full">
@@ -299,7 +300,7 @@ export default function DebtsPage() {
                 debt.minimumPayment,
                 debt.interestRate,
               )
-              const dueDate = new Date(debt.dueDate)
+              const dueDate = debt.dueDate ? new Date(debt.dueDate) : null
               const isDueSoon = dueSoonDebts.has(debt.id)
 
               return (
@@ -358,7 +359,9 @@ export default function DebtsPage() {
                         <span className="text-muted-foreground">
                           {formatCurrency(debt.totalAmount - debt.remainingAmount, currency)} paid
                         </span>
-                        <span className="text-muted-foreground">Due: {dueDate.toLocaleDateString()}</span>
+                        {dueDate && (
+                          <span className="text-muted-foreground">Due: {dueDate.toLocaleDateString()}</span>
+                        )}
                       </div>
                     </div>
                   </CardContent>

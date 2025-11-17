@@ -129,3 +129,7 @@ reminders for savings and paying debts and stuff
 ui-https://github.com/floranguyen0/mmas-money-tracker
 more features
 customizable navbar
+link calenders
+why you took the debt greg
+daily email reminder
+react-native app
