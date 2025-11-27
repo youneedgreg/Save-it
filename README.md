@@ -116,15 +116,12 @@ Saveit is built with modern web technologies to ensure a robust, scalable, and u
 (Instructions on how to set up and run the project locally would go here.)
 
 intro with pop ups tailor made for responsiveness
-auth
-local storage-pouch db sync to cloud
 responsive, half navbar, half sidebar
 live conversions
 pwa
 wishlist adds to spending
 auto pay bills to spending
 add savings goal
-supabase integration
 reminders for savings and paying debts and stuff
 ui-https://github.com/floranguyen0/mmas-money-tracker
 more features
@@ -135,3 +132,4 @@ daily email reminder
 react-native app
 debt-overview dashboard
 AI
+account profile

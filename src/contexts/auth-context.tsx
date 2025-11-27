@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react"
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react"
 import { User, Session, AuthError } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabase"
 import { getFinancialData, saveFinancialData } from "@/lib/storage"
@@ -27,43 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSyncing, setIsSyncing] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {
-    // Check if Supabase is configured
-    if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      setLoading(false)
-      return
-    }
-
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    }).catch(() => {
-      // Supabase not configured or error
-      setLoading(false)
-    })
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      
-      // Sync data when user logs in
-      if (session?.user) {
-        // Sync after a short delay to ensure state is updated
-        setTimeout(async () => {
-          await syncDataToCloud(session.user)
-        }, 100)
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
-
-  const syncDataToCloud = async (userToSync?: User): Promise<boolean> => {
+  const syncDataToCloud = useCallback(async (userToSync?: User): Promise<boolean> => {
     const targetUser = userToSync || user
     if (!targetUser || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
       return false
@@ -139,16 +103,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       return true
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error during sync:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred. Please check the console for details."
       toast({
         title: "Sync Failed",
-        description: error?.message || "Unknown error occurred. Please check the console for details.",
+        description: errorMessage,
         variant: "destructive",
       })
       return false
     }
-  }
+  }, [user, toast])
+
+  useEffect(() => {
+    // Check if Supabase is configured
+    if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      setLoading(false)
+      return
+    }
+
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    }).catch(() => {
+      // Supabase not configured or error
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      
+      // Sync data when user logs in
+      if (session?.user) {
+        // Sync after a short delay to ensure state is updated
+        setTimeout(async () => {
+          await syncDataToCloud(session.user)
+        }, 100)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [syncDataToCloud])
+
 
   const syncData = async () => {
     if (!user || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -282,11 +284,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           })
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error during sync:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred. Please check the console for details."
       toast({
         title: "Sync Failed",
-        description: error?.message || "Unknown error occurred. Please check the console for details.",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {
@@ -309,7 +312,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      return { error: { message: "Supabase is not configured" } as any }
+      return { 
+        error: { 
+          message: "Supabase is not configured",
+          name: "ConfigurationError",
+          status: 500,
+        } as AuthError 
+      }
     }
     const { error } = await supabase.auth.signUp({
       email,
@@ -320,7 +329,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      return { error: { message: "Supabase is not configured" } as any }
+      return { 
+        error: { 
+          message: "Supabase is not configured",
+          name: "ConfigurationError",
+          status: 500,
+        } as AuthError 
+      }
     }
     const { error } = await supabase.auth.signInWithPassword({
       email,
