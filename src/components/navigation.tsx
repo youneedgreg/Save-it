@@ -38,6 +38,7 @@ import {
 import { CurrencySelector } from "./currency-selector"
 import { ThemeToggle } from "./theme-toggle"
 import { AuthDialog } from "./auth-dialog"
+import { SettingsDialog } from "./settings-dialog"
 import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 
@@ -64,6 +65,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [authDialogOpen, setAuthDialogOpen] = useState(false)
   const [authDialogMode, setAuthDialogMode] = useState<"login" | "signup">("login")
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
   const { user, signOut, syncData, isSyncing } = useAuth()
 
   const handleSignOut = async () => {
@@ -177,7 +179,10 @@ export function Navigation() {
                       </>
                     )}
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                  <DropdownMenuItem 
+                    onClick={() => setSettingsDialogOpen(true)}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <Settings className="h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
@@ -297,6 +302,10 @@ export function Navigation() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => {
+                      setSettingsDialogOpen(true)
+                      setMobileMenuOpen(false)
+                    }}
                     className="w-full flex items-center justify-start gap-2"
                   >
                     <Settings className="h-4 w-4" />
@@ -351,6 +360,10 @@ export function Navigation() {
         open={authDialogOpen}
         onOpenChange={setAuthDialogOpen}
         initialMode={authDialogMode}
+      />
+      <SettingsDialog
+        open={settingsDialogOpen}
+        onOpenChange={setSettingsDialogOpen}
       />
     </nav>
   )
