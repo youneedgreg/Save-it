@@ -31,7 +31,7 @@ import type {
       localStorage.setItem("money-mastery-last-updated", Date.now().toString())
       
       // Sync to Supabase (fire and forget - don't block UI)
-      supabase
+      void supabase
         .from("financial_data")
         .upsert(
           {
@@ -54,10 +54,10 @@ import type {
             })
           }
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
           console.error("Error syncing to cloud:", {
-            message: error?.message,
-            stack: error?.stack,
+            message: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
             fullError: error
           })
         })
