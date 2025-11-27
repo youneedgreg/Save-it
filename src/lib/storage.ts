@@ -13,9 +13,44 @@ import type {
     Habit,
     WishlistItem,
   } from "./types"
+  import { supabase } from "./supabase"
   
   const STORAGE_KEY = "money-mastery-data"
   const CURRENCY_KEY = "money-mastery-currency"
+  
+  // Helper function to sync data to Supabase (non-blocking)
+  const syncToCloud = async (data: FinancialData): Promise<void> => {
+    if (typeof window === "undefined") return
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return // Supabase not configured
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return // Not authenticated, skip sync
+      
+      // Update timestamp
+      localStorage.setItem("money-mastery-last-updated", Date.now().toString())
+      
+      // Sync to Supabase (fire and forget - don't block UI)
+      supabase
+        .from("financial_data")
+        .upsert({
+          user_id: user.id,
+          data: data,
+          updated_at: new Date().toISOString(),
+        })
+        .then(({ error }) => {
+          if (error) {
+            console.error("Error syncing to cloud:", error)
+          }
+        })
+        .catch((error) => {
+          console.error("Error syncing to cloud:", error)
+        })
+    } catch (error) {
+      // Silently fail - offline or not authenticated
+      console.debug("Sync skipped:", error)
+    }
+  }
   
   export const getCurrency = (): Currency => {
     if (typeof window === "undefined") return "KES"
@@ -56,6 +91,8 @@ import type {
   export const saveFinancialData = (data: FinancialData): void => {
     if (typeof window === "undefined") return
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    // Sync to cloud if authenticated (non-blocking)
+    syncToCloud(data)
   }
   
   export const addBudget = (budget: Omit<Budget, "id">): void => {

@@ -19,6 +19,11 @@ import {
   Heart,
   Ellipsis,
   Menu,
+  LogIn,
+  LogOut,
+  User,
+  Cloud,
+  CloudOff,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -26,9 +31,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { CurrencySelector } from "./currency-selector"
 import { ThemeToggle } from "./theme-toggle"
+import { AuthDialog } from "./auth-dialog"
+import { useAuth } from "@/contexts/auth-context"
+import { Button } from "@/components/ui/button"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -51,6 +60,18 @@ const moreNavItems = navItems.slice(5)
 export function Navigation() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [authDialogOpen, setAuthDialogOpen] = useState(false)
+  const [authDialogMode, setAuthDialogMode] = useState<"login" | "signup">("login")
+  const { user, signOut, syncData, isSyncing } = useAuth()
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
+
+  const openAuthDialog = (mode: "login" | "signup") => {
+    setAuthDialogMode(mode)
+    setAuthDialogOpen(true)
+  }
 
   return (
     <nav className="border-b bg-card" data-tour="navigation" suppressHydrationWarning>
@@ -111,6 +132,67 @@ export function Navigation() {
               <ThemeToggle />
             </div>
             <CurrencySelector />
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">{user.email?.split("@")[0]}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                    {user.email}
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={syncData}
+                    disabled={isSyncing}
+                    className="flex items-center gap-2"
+                  >
+                    {isSyncing ? (
+                      <>
+                        <Cloud className="h-4 w-4 animate-pulse" />
+                        Syncing...
+                      </>
+                    ) : (
+                      <>
+                        <Cloud className="h-4 w-4" />
+                        Sync Data
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => openAuthDialog("login")}
+                  className="flex items-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => openAuthDialog("signup")}
+                  className="hidden sm:flex items-center gap-2"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
           </div>
           <div className="md:hidden flex items-center">
             <button
@@ -149,9 +231,69 @@ export function Navigation() {
               <ThemeToggle />
               <CurrencySelector />
             </div>
+            {user ? (
+              <div className="w-full px-4 py-2 space-y-2">
+                <div className="text-sm text-muted-foreground px-2">
+                  {user.email}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={syncData}
+                  disabled={isSyncing}
+                  className="w-full flex items-center gap-2"
+                >
+                  {isSyncing ? (
+                    <>
+                      <Cloud className="h-4 w-4 animate-pulse" />
+                      Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <Cloud className="h-4 w-4" />
+                      Sync Data
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="w-full px-4 py-2 space-y-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openAuthDialog("login")}
+                  className="w-full flex items-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => openAuthDialog("signup")}
+                  className="w-full flex items-center gap-2"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
+      <AuthDialog
+        open={authDialogOpen}
+        onOpenChange={setAuthDialogOpen}
+        initialMode={authDialogMode}
+      />
     </nav>
   )
 }

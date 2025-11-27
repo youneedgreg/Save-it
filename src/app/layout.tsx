@@ -1,6 +1,7 @@
 import { Navigation } from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CurrencyProvider } from "@/contexts/currency-context"
+import { AuthProvider } from "@/contexts/auth-context"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Suspense } from "react"
 import { cookies } from "next/headers"
@@ -53,12 +54,14 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <CurrencyProvider initialCurrency={currency}>
+          <AuthProvider>
+            <CurrencyProvider initialCurrency={currency}>
               <Suspense fallback={null}>
                 <Navigation />
                 {children}
               </Suspense>
-          </CurrencyProvider>
+            </CurrencyProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
