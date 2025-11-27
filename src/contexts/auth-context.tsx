@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { User, Session, AuthError } from "@supabase/supabase-js"
 import { supabase } from "@/lib/supabase"
 import { getFinancialData, saveFinancialData } from "@/lib/storage"
+import { useToast } from "@/hooks/use-toast"
 import type { FinancialData } from "@/lib/types"
 
 interface AuthContextType {
@@ -24,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [isSyncing, setIsSyncing] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     // Check if Supabase is configured
@@ -61,35 +63,102 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const syncDataToCloud = async (userToSync?: User) => {
+  const syncDataToCloud = async (userToSync?: User): Promise<boolean> => {
     const targetUser = userToSync || user
-    if (!targetUser || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) return
+    if (!targetUser || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      return false
+    }
 
-    setIsSyncing(true)
     try {
       const localData = getFinancialData()
       
       // Upload local data to Supabase
+      // Use onConflict to specify user_id as the conflict resolution column
       const { error } = await supabase
         .from("financial_data")
-        .upsert({
-          user_id: targetUser.id,
-          data: localData,
-          updated_at: new Date().toISOString(),
-        })
+        .upsert(
+          {
+            user_id: targetUser.id,
+            data: localData,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "user_id",
+          }
+        )
 
       if (error) {
         console.error("Error syncing data to cloud:", error)
+        
+        // Provide helpful error messages
+        if (error.code === "42P01" || error.message?.includes("relation") || error.message?.includes("does not exist")) {
+          toast({
+            title: "Database Table Not Found",
+            description: "Please run the migration SQL in your Supabase dashboard. See ENV_SETUP.md for instructions.",
+            variant: "destructive",
+          })
+          return false
+        }
+        
+        if (error.code === "42501" || error.message?.includes("permission") || error.message?.includes("policy")) {
+          toast({
+            title: "Permission Denied",
+            description: "Please check your Row Level Security (RLS) policies in Supabase.",
+            variant: "destructive",
+          })
+          return false
+        }
+        
+        if (error.code === "23505" || error.message?.includes("duplicate key") || error.message?.includes("unique constraint")) {
+          // This shouldn't happen with onConflict, but if it does, try to update instead
+          const { error: updateError } = await supabase
+            .from("financial_data")
+            .update({
+              data: localData,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("user_id", targetUser.id)
+          
+          if (updateError) {
+            toast({
+              title: "Sync Failed",
+              description: updateError.message || "Failed to update existing data.",
+              variant: "destructive",
+            })
+            return false
+          }
+          return true
+        }
+        
+        toast({
+          title: "Sync Failed",
+          description: error.message || "Unknown error occurred. Please check the console for details.",
+          variant: "destructive",
+        })
+        return false
       }
-    } catch (error) {
+      
+      return true
+    } catch (error: any) {
       console.error("Error during sync:", error)
-    } finally {
-      setIsSyncing(false)
+      toast({
+        title: "Sync Failed",
+        description: error?.message || "Unknown error occurred. Please check the console for details.",
+        variant: "destructive",
+      })
+      return false
     }
   }
 
   const syncData = async () => {
-    if (!user || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) return
+    if (!user || !supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      toast({
+        title: "Configuration Error",
+        description: "Supabase is not configured. Please set up your environment variables.",
+        variant: "destructive",
+      })
+      return
+    }
 
     setIsSyncing(true)
     try {
@@ -105,8 +174,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (fetchError && fetchError.code !== "PGRST116") {
         // PGRST116 is "not found" error, which is fine for new users
         console.error("Error fetching cloud data:", fetchError)
-        // If fetch fails, upload local data
-        await syncDataToCloud()
+        
+        // Check if it's a table/RLS issue
+        if (fetchError.code === "42P01" || fetchError.message?.includes("relation") || fetchError.message?.includes("does not exist")) {
+          toast({
+            title: "Database Table Not Found",
+            description: "Please run the migration SQL in your Supabase dashboard. See ENV_SETUP.md for instructions.",
+            variant: "destructive",
+          })
+          setIsSyncing(false)
+          return
+        }
+        
+        if (fetchError.code === "42501" || fetchError.message?.includes("permission") || fetchError.message?.includes("policy")) {
+          toast({
+            title: "Permission Denied",
+            description: "Please check your Row Level Security (RLS) policies in Supabase.",
+            variant: "destructive",
+          })
+          setIsSyncing(false)
+          return
+        }
+        
+        // If fetch fails for other reasons, try to upload local data
+        const uploadResult = await syncDataToCloud()
+        if (!uploadResult) {
+          toast({
+            title: "Sync Failed",
+            description: fetchError.message || "Unknown error occurred. Please check the console for details.",
+            variant: "destructive",
+          })
+        }
         return
       }
 
@@ -148,19 +246,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("money-mastery-last-updated", Date.now().toString())
 
         // Upload merged data to cloud
-        await supabase
+        const { error: upsertError } = await supabase
           .from("financial_data")
-          .upsert({
-            user_id: user.id,
-            data: mergedData,
-            updated_at: new Date().toISOString(),
+          .upsert(
+            {
+              user_id: user.id,
+              data: mergedData,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              onConflict: "user_id",
+            }
+          )
+        
+        if (upsertError) {
+          console.error("Error uploading merged data:", upsertError)
+          toast({
+            title: "Sync Failed",
+            description: upsertError.message || "Unknown error occurred. Please check the console for details.",
+            variant: "destructive",
           })
+        } else {
+          toast({
+            title: "Success",
+            description: "Your data has been synced successfully!",
+          })
+        }
       } else {
         // No cloud data, upload local data
-        await syncDataToCloud()
+        const uploadResult = await syncDataToCloud()
+        if (uploadResult) {
+          toast({
+            title: "Success",
+            description: "Your data has been synced successfully!",
+          })
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during sync:", error)
+      toast({
+        title: "Sync Failed",
+        description: error?.message || "Unknown error occurred. Please check the console for details.",
+        variant: "destructive",
+      })
     } finally {
       setIsSyncing(false)
     }

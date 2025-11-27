@@ -33,18 +33,33 @@ import type {
       // Sync to Supabase (fire and forget - don't block UI)
       supabase
         .from("financial_data")
-        .upsert({
-          user_id: user.id,
-          data: data,
-          updated_at: new Date().toISOString(),
-        })
+        .upsert(
+          {
+            user_id: user.id,
+            data: data,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: "user_id",
+          }
+        )
         .then(({ error }) => {
           if (error) {
-            console.error("Error syncing to cloud:", error)
+            console.error("Error syncing to cloud:", {
+              message: error.message,
+              code: error.code,
+              details: error.details,
+              hint: error.hint,
+              fullError: error
+            })
           }
         })
         .catch((error) => {
-          console.error("Error syncing to cloud:", error)
+          console.error("Error syncing to cloud:", {
+            message: error?.message,
+            stack: error?.stack,
+            fullError: error
+          })
         })
     } catch (error) {
       // Silently fail - offline or not authenticated
