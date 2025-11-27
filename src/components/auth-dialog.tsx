@@ -46,7 +46,7 @@ export function AuthDialog({ open, onOpenChange, initialMode = "login" }: AuthDi
         setPassword("")
         onOpenChange(false)
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)
@@ -115,7 +115,7 @@ export function AuthDialog({ open, onOpenChange, initialMode = "login" }: AuthDi
           <div className="text-center text-sm text-muted-foreground">
             {mode === "login" ? (
               <>
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={switchMode}

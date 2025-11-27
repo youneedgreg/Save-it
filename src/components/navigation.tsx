@@ -23,6 +23,8 @@ import {
   LogOut,
   User,
   Cloud,
+  Settings,
+  Shield,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -31,6 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { CurrencySelector } from "./currency-selector"
 import { ThemeToggle } from "./theme-toggle"
@@ -135,39 +138,62 @@ export function Navigation() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">{user.email?.split("@")[0]}</span>
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="hidden sm:inline font-medium">{user.email?.split("@")[0]}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                    {user.email}
+                <DropdownMenuContent align="end" className="w-56">
+                  {/* User Info Section */}
+                  <div className="px-2 py-3">
+                    <DropdownMenuLabel className="px-0 font-semibold">
+                      {user.email?.split("@")[0]}
+                    </DropdownMenuLabel>
+                    <p className="text-xs text-muted-foreground mt-1 truncate">
+                      {user.email}
+                    </p>
                   </div>
                   <DropdownMenuSeparator />
+                  
+                  {/* Account Actions */}
+                  <DropdownMenuLabel className="px-2 text-xs font-medium text-muted-foreground">
+                    Account
+                  </DropdownMenuLabel>
                   <DropdownMenuItem
                     onClick={syncData}
                     disabled={isSyncing}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 cursor-pointer"
                   >
                     {isSyncing ? (
                       <>
                         <Cloud className="h-4 w-4 animate-pulse" />
-                        Syncing...
+                        <span>Syncing...</span>
                       </>
                     ) : (
                       <>
                         <Cloud className="h-4 w-4" />
-                        Sync Data
+                        <span>Sync Data</span>
                       </>
                     )}
                   </DropdownMenuItem>
+                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                    <Settings className="h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                    <Shield className="h-4 w-4" />
+                    <span>Privacy & Security</span>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
+                  
+                  {/* Sign Out */}
                   <DropdownMenuItem
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 text-destructive focus:text-destructive"
+                    className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
                   >
                     <LogOut className="h-4 w-4" />
-                    Sign Out
+                    <span>Sign Out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -231,29 +257,62 @@ export function Navigation() {
               <CurrencySelector />
             </div>
             {user ? (
-              <div className="w-full px-4 py-2 space-y-2">
-                <div className="text-sm text-muted-foreground px-2">
-                  {user.email}
+              <div className="w-full px-4 py-3 space-y-3 border-t mt-2">
+                {/* User Info */}
+                <div className="flex items-center gap-3 px-2">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">
+                      {user.email?.split("@")[0]}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {user.email}
+                    </p>
+                  </div>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={syncData}
-                  disabled={isSyncing}
-                  className="w-full flex items-center gap-2"
-                >
-                  {isSyncing ? (
-                    <>
-                      <Cloud className="h-4 w-4 animate-pulse" />
-                      Syncing...
-                    </>
-                  ) : (
-                    <>
-                      <Cloud className="h-4 w-4" />
-                      Sync Data
-                    </>
-                  )}
-                </Button>
+                
+                {/* Account Actions */}
+                <div className="space-y-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={syncData}
+                    disabled={isSyncing}
+                    className="w-full flex items-center justify-start gap-2"
+                  >
+                    {isSyncing ? (
+                      <>
+                        <Cloud className="h-4 w-4 animate-pulse" />
+                        Syncing...
+                      </>
+                    ) : (
+                      <>
+                        <Cloud className="h-4 w-4" />
+                        Sync Data
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full flex items-center justify-start gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full flex items-center justify-start gap-2"
+                  >
+                    <Shield className="h-4 w-4" />
+                    Privacy & Security
+                  </Button>
+                </div>
+                
+                {/* Sign Out */}
                 <Button
                   variant="destructive"
                   size="sm"
