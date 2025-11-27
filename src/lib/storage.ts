@@ -31,18 +31,20 @@ import type {
       localStorage.setItem("money-mastery-last-updated", Date.now().toString())
       
       // Sync to Supabase (fire and forget - don't block UI)
-      void supabase
-        .from("financial_data")
-        .upsert(
-          {
-            user_id: user.id,
-            data: data,
-            updated_at: new Date().toISOString(),
-          },
-          {
-            onConflict: "user_id",
-          }
-        )
+      Promise.resolve(
+        supabase
+          .from("financial_data")
+          .upsert(
+            {
+              user_id: user.id,
+              data: data,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              onConflict: "user_id",
+            }
+          )
+      )
         .then(({ error }) => {
           if (error) {
             console.error("Error syncing to cloud:", {
